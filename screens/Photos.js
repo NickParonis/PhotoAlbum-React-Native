@@ -1,46 +1,46 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 
-// import Navigator from './routes/homeStack';
-// import Homestack from '../PhotoAlbum-React-Native/routes/Homestack';
-
-
-const Photos = () => {
-
+const Photos = ({navigation, route}) => {
 
   const [photoList, setPhotoList] = useState(null);
   const [photosareLoaded, setPhotosareLoaded] = useState(false);
 
   useEffect( () => {
     if(!photosareLoaded){
-      fetch('https://jsonplaceholder.typicode.com/Photos')
+      fetch('https://jsonplaceholder.typicode.com/Photos?albumId+' + route.params.id)
       .then(response => response.json())
       .then(json => {
-      setPhotoList(json);
-      setPhotosareLoaded(true);
-    })
+        setPhotoList(json);
+        setPhotosareLoaded(true);
+      })
     }
   })
 
-
   const photoView = () => {
-    console.log(photoList)
-    if ( photosareLoaded){
+    // console.log(photoList)
+    if (photosareLoaded){
+      console.log(route.params.id);
       return(
-        <FlatList 
+        <View>
+          <Text>
+            {route.params.title}
+          </Text>
+          <FlatList 
           data={photoList} 
           keyExtractor={(x, i) => i}
           renderItem={({item}) => {
             return <View style={styles.container}>
-                <TouchableOpacity  onPress={ () => console.log(item.id)}>
+                <TouchableOpacity >
                 <Image
                     style={styles.img}
                     source={{uri: item.url}}
                     />
-                    <Text>dasdas</Text>
                 </TouchableOpacity>
             </View>
-          }}/>
+          }
+        }/>
+        </View>
       )
     }
     else {
@@ -51,16 +51,10 @@ const Photos = () => {
       )
     }
   }
-
-
-    return(
-      photoView()
-    )
-
-
+  return(
+    photoView()
+  )
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
