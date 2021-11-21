@@ -1,42 +1,37 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-// import Navigator from './routes/homeStack';
-// import Homestack from '../PhotoAlbum-React-Native/routes/Homestack';
-
-
-const App = () =>   {
+const App = ({navigation}) =>   {
 
   const [albumList, setAlbumList] = useState(null);
   const [albumsareLoaded, setAlbumsareLoaded] = useState(false);
 
   useEffect( () => {
     if(!albumsareLoaded){
-      fetch('https://jsonplaceholder.typicode.com/Albums')
-      .then(response => response.json())
-      .then(json => {
-      setAlbumList(json);
-      setAlbumsareLoaded(true);
-    })
+      fetch("https://jsonplaceholder.typicode.com/Albums")
+      .then( (response) => {
+        if (response.ok){
+          return response.json()}
+        else {
+          console.log("Something went wrong, check server's response")
+      }})
+      .then( (json) => {setAlbumList(json); setAlbumsareLoaded(true);})
+      .catch( (error) => {
+        navigation.navigate('ErrorView')
+      });
     }
   })
-
-
-
+  
   const albumView = () => {
-    console.log(albumList)
     if (albumsareLoaded){
       return(
-        <FlatList 
-          data={albumList} 
-          keyExtractor={(x, i) => i}
-          renderItem={({item}) => {
-            return <View>
-              <TouchableOpacity onPress={ () => console.log(item.id)}>
-                <Text style={styles.albumView}>{item.id} {item.title} </Text>
-              </TouchableOpacity>
-            </View>
-          }}/>
+        <FlatList data={albumList}  keyExtractor={(x, i) => i}
+        renderItem={({item}) => {
+        return <View>
+          <TouchableOpacity  onPress={ () => {navigation.navigate('Photos', item); console.log(item)}}>
+            <Text style={styles.albumView}> {item.title} </Text>
+          </TouchableOpacity>
+        </View>}}/>
       )
     }
     else {
@@ -48,10 +43,9 @@ const App = () =>   {
     }
   }
 
-    return(
-      albumView()
-    )
-
+  return(
+    albumView()
+  )
 }
 
 const styles = StyleSheet.create({
