@@ -1,15 +1,26 @@
 import React from 'react';
-import { Text, View, Button } from 'react-native';
+import { View, Button, StyleSheet,ImageBackground } from 'react-native';
 
 const Home = ({navigation}) => {
-  return (
-    <View style={{ flex: 1 }}>
-        <Button
-            onPress={() => navigation.navigate('Albums')}
-            title="View Albums"
-        />
-    </View>
-  );
+  	return (
+		<View style={styles.homeContainer}>
+			<ImageBackground source={ require('../assets/bgcat.jpg') } style={styles.image}>
+				<Button style={styles.homeButton} onPress={() => navigation.navigate('Albums')}
+				title="View Albums"
+				/>
+			</ImageBackground>
+		</View>
+  	);
 }
+
+const styles = StyleSheet.create({
+  	homeContainer: {
+    	flex: 1,
+ 	},
+ 	image: {
+		flex: 1,
+		justifyContent: 'center',
+  	},
+})
 
 export default Home
